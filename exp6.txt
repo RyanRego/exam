@@ -2,6 +2,8 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_arith.ALL;
 use IEEE.STD_LOGIC_unsigned.ALL;
+
+
 entity usr is
     Port ( Clk,rst,sin : in  STD_LOGIC;
            m : in  STD_LOGIC_VECTOR (1 downto 0);
@@ -15,6 +17,8 @@ signal p1,p2:std_logic_vector(3 downto 0);
 signal s1:std_logic;
 signal temp:std_logic_vector(22 downto 0);  
 signal sclk:std_logic;
+
+
 begin
 p11: process(clk,rst)
 	begin

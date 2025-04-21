@@ -1,0 +1,107 @@
+library IEE;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+
+entity alu is
+    port(
+        a, b: in std_logic_vector(1 downto 0);
+        sel: in std_logic_vector(2 downto 0);
+        out: out std_logic_vector(1 downto 0);
+    );
+end alu;
+
+architecture behavioral of alu is
+begin 
+process(a, b, sel)
+    begin
+        case sel is
+        when "000" => out <= a + b;
+        when "000" => out <= a + b;
+        when "000" => out <= a + b;
+        when "000" => out <= a + b;
+        when "000" => out <= a + b;
+    end case;
+end process;
+end Behavioral;
+
+
+TESTBENCH CODE;
+
+library ieee;
+use ieee.std_logic_1164.all;
+
+
+entity alu is
+end entity;
+
+architecture behavior of alu is 
+##components
+##signals
+
+component alu
+port(
+    a, b: in std_logic_vector(1 downto 0);
+    sel: in std_logic_vector(2 downto 0);
+    out: out std_logic_vector(1 downto 0);
+);
+end component;
+
+    signal A   : std_logic_vector(1 downto 0) := (others => '0');
+    signal B   : std_logic_vector(1 downto 0) := (others => '0');
+    signal sel : std_logic_vector(2 downto 0) := (others => '0');
+    signal Y   : std_logic_vector(1 downto 0);
+
+
+begin 
+
+    //uut
+    uut: alu port map(
+        a => a;
+        b => b;
+        sel => sel;
+        out => out;
+    );
+
+    process
+    begin
+        a <= "10";
+        b <= "10";
+        sel <= "000";
+        wait for 20ns;
+    end process;
+end behavior;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MOD-N counter
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.unsigned.all;
