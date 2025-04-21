@@ -1,0 +1,159 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_arith.ALL;
+use IEEE.STD_LOGIC_unsigned.ALL;
+entity usr is
+    Port ( Clk,rst,sin : in  STD_LOGIC;
+           m : in  STD_LOGIC_VECTOR (1 downto 0);
+           pin : in  STD_LOGIC_VECTOR (3 downto 0);
+           sout : out  STD_LOGIC;
+           pout : out  STD_LOGIC_VECTOR (3 downto 0));
+end usr;
+
+architecture Behavioral of usr is
+signal p1,p2:std_logic_vector(3 downto 0);
+signal s1:std_logic;
+signal temp:std_logic_vector(22 downto 0);  
+signal sclk:std_logic;
+begin
+p11: process(clk,rst)
+	begin
+	if(rst='1')then temp<=(others=>'0');
+		elsif(clk'event and clk='1') then
+		temp<= temp + 1;
+		end if;
+	end process;
+	sclk<=temp(22);
+
+p22:process(sclk,rst,pin,sin,m)                         
+begin
+if(rst='1') then 
+     p1<="0000";
+     p2<="0000";
+	  s1<='0';
+elsif (sclk'event and sclk='1') then
+	if(m="00") then     --SISO
+	p1(0)<=sin;
+	p1(1)<=p1(0);
+	p1(2)<=p1(1);
+	p1(3)<=p1(2);
+	s1<=p1(3);
+elsif (m="01") then   --SIPO
+             p1(0)<=sin;
+	p1(1)<=p1(0);
+	p1(2)<=p1(1);
+	p1(3)<=p1(2);
+	   p2<=p1;
+elsif(m="10") then   --PIPO
+	   p1<=pin;
+	   p2<=p1;
+else                 --PISO
+         p1<=pin;
+         s1<=p1(3);
+end if;
+end if;
+end process;
+pout<=p2;
+sout<=s1;
+end Behavioral;
+
+
+
+
+
+TESTBENCH CODE
+
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+ 
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--USE ieee.numeric_std.ALL;
+ 
+ENTITY usr_tb IS
+END usr_tb;
+ 
+ARCHITECTURE behavior OF usr_tb IS 
+ 
+    -- Component Declaration for the Unit Under Test (UUT)
+ 
+    COMPONENT usr
+    PORT(
+         Clk : IN  std_logic;
+         rst : IN  std_logic;
+         sin : IN  std_logic;
+         m : IN  std_logic_vector(1 downto 0);
+         pin : IN  std_logic_vector(3 downto 0);
+         sout : OUT  std_logic;
+         pout : OUT  std_logic_vector(3 downto 0)
+        );
+    END COMPONENT;
+       --Inputs
+   signal Clk : std_logic := '0';
+   signal rst : std_logic := '0';
+   signal sin : std_logic := '0';
+   signal m : std_logic_vector(1 downto 0) := (others => '0');
+   signal pin : std_logic_vector(3 downto 0) := (others => '0');
+
+ 	--Outputs
+   signal sout : std_logic;
+   signal pout : std_logic_vector(3 downto 0);
+
+   -- Clock period definitions
+   constant Clk_period : time := 20 ns;
+ 
+BEGIN
+ 
+	-- Instantiate the Unit Under Test (UUT)
+   uut: usr PORT MAP (
+          Clk => Clk,
+          rst => rst,
+          sin => sin,
+          m => m,
+          pin => pin,
+          sout => sout,
+          pout => pout
+        );
+
+   -- Clock process definitions
+   Clk_process :process
+   begin
+		Clk <= '0';
+		wait for Clk_period/2;
+		Clk <= '1';
+		wait for Clk_period/2;
+   end process;
+ 
+
+rst_process :process
+   begin
+		rst <= '1';
+		wait for Clk_period;
+		rst <= '0';
+		wait;
+   end process;
+	
+	
+   -- Stimulus process
+   stim_proc: process
+   begin		
+                 pin<="1001";
+	   sin<='1';	
+	   m<="00”;     -- SISO
+	   wait for 120 ns;
+	
+              pin<="1101";
+	sin<='1';
+	m<="01";   -- SIPO
+              wait for 120 ns;
+	
+	pin<="1101";   --PIPO
+	m<="10";
+               wait for 120 ns; 
+	
+	pin<="0100";    -- PISO
+	m<="11";
+              wait; 
+        end process;
+END;

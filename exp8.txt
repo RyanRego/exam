@@ -1,112 +1,128 @@
 library IEEE;
-use IEEE.STD_LOGIC_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
-
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity modN_counter is
-
-generic(n: integer := 128);
-
-port(
-clk : in STD_LOGIC;
-reset : in STD_LOGIC;
-dout : out STD_LOGIC_VECTOR(6 downto 0)
-         );
+  generic(n: integer := 128);  -- Modulo value
+  port(
+    clk   : in  STD_LOGIC;
+    reset : in  STD_LOGIC;
+    dout  : out STD_LOGIC_VECTOR(6 downto 0)
+  );
 end modN_counter;
 
-
 architecture A_modN of modN_counter is
-
+  signal m : integer range 0 to n-1 := 0;  -- Use signal instead of variable for better synthesis
 begin
+  counter : process(clk, reset)
+  begin
+    if reset = '1' then
+      m <= 0;
+    elsif rising_edge(clk) then
+      if m = n - 1 then
+        m <= 0;
+      else
+        m <= m + 1;
+      end if;
+    end if;
 
-counter : process (clk,reset) is
-
-	 variable m : integer range 0 to (n-1) := 0;
-    begin
-        if (reset='1') then
-m := 0;
-        --elsif (rising_edge (clk)) then
-		elsif(clk'event and clk='1') then
-m := m + 1;
-        end if;
-        if (m=(n)) then
-m := 0;
-        end if;
-dout<= conv_std_logic_vector (m,7);
-    end process counter;
-
+    -- Convert integer to 7-bit vector
+    dout <= conv_std_logic_vector(m, 7);
+  end process counter;
 end A_modN;
+
 
 
 
 ##TESTBENCH
 
 
-LIBRARY ieee;
-USE ieee.std_logic_1164.ALL;
- 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
- 
-ENTITY MOD_TB IS
-END MOD_TB;
- 
-ARCHITECTURE behavior OF MOD_TB IS 
- 
-    -- Component Declaration for the Unit Under Test (UUT)
- 
-    COMPONENT modN_counter
-    PORT(
-         clk : IN  std_logic;
-         reset : IN  std_logic;
-         dout : OUT  std_logic_vector(6 downto 0)
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity tb_modN_counter is
+end tb_modN_counter;
+
+architecture behavior of tb_modN_counter is
+
+    -- Component Declaration
+    component modN_counter
+        generic(n: integer := 128);
+        port(
+            clk   : in  STD_LOGIC;
+            reset : in  STD_LOGIC;
+            dout  : out STD_LOGIC_VECTOR(6 downto 0)
         );
-    END COMPONENT;
-    
+    end component;
 
-   --Inputs
-   signal clk : std_logic := '0';
-   signal reset : std_logic := '0';
+    -- Signals for test
+    signal clk   : STD_LOGIC := '0';
+    signal reset : STD_LOGIC := '0';
+    signal dout  : STD_LOGIC_VECTOR(6 downto 0);
 
- 	--Outputs
-   signal dout : std_logic_vector(6 downto 0);
+    -- Constant
+    constant CLK_PERIOD : time := 10 ns;
 
-   -- Clock period definitions
-   constant clk_period : time := 10 ns;
- 
-BEGIN
- 
-	-- Instantiate the Unit Under Test (UUT)
-   uut: modN_counter PORT MAP (
-          clk => clk,
-          reset => reset,
-          dout => dout
+begin
+
+    -- Instantiate the Unit Under Test (UUT)
+    uut: modN_counter
+        port map (
+            clk   => clk,
+            reset => reset,
+            dout  => dout
         );
 
-   -- Clock process definitions
-   clk_process :process
-   begin
-		clk <= '0';
-		wait for clk_period/2;
-		clk <= '1';
-		wait for clk_period/2;
-   end process;
- 
+    -- Clock generation
+    clk_process : process
+    begin
+        while true loop
+            clk <= '0';
+            wait for CLK_PERIOD / 2;
+            clk <= '1';
+            wait for CLK_PERIOD / 2;
+        end loop;
+    end process;
 
-   -- Stimulus process
-   stim_proc: process
-   begin		
-      -- hold reset state for 100 ns.
-      --wait for 100 ns;	
-     reset<='1';
-	  wait for 10 ns;	
-	  reset<='0';
-     
-      -- insert stimulus here 
+    stim_proc: process
+    begin
+        -- Initial Reset
+        reset <= '1';
+        wait for 20 ns;
+        reset <= '0';
 
-      wait;
-   end process;
+        -- Wait to observe counter outputs
+        wait for 1000 ns;
+        
+        -- Reset again to test reset functionality
+        reset <= '1';
+        wait for 20 ns;
+        reset <= '0';
 
-END;
+        wait for 200 ns;
+
+        -- Stop simulation
+        wait;
+    end process;
+
+end behavior;
+
+
+
+CONSTRAINT FILE
+
+NET "reset" LOC = "E4"; 
+NET "CLK" LOC ="L15";  
+NET "dout<0>" LOC = "U18"; # Bank = 1, Pin name = IO_L52N_M1DQ15,  Sch name = LD0
+NET "dout<1>" LOC = "M14"; # Bank = 1, Pin name = IO_L53P,  Sch name = LD1
+NET "dout<2>" LOC = "N14"; # Bank = 1, Pin name = IO_L53N_VREF,  Sch name = LD2
+NET "dout<3>" LOC = "L14"; # Bank = 1, Pin name = IO_L61P,  Sch name = LD3
+NET "dout<4>" LOC = "M13"; # Bank = 1, Pin name = IO_L61N,  Sch name = LD4
+NET "dout<5>" LOC = "D4"; # Bank = 1, Pin name = IO_L61P,  Sch name = LD3
+NET "dout<6>" LOC = "P16"; # Bank = 1, Pin name = IO_L61P,  Sch name = LD3
+#NET "dout<7>" LOC = "N12";
+
+
