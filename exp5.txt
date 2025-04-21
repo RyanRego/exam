@@ -1,0 +1,103 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity alu_lab8 is
+    Port (
+        A, B : in  STD_LOGIC_VECTOR (1 downto 0);
+        sel  : in  STD_LOGIC_VECTOR (2 downto 0);
+        Y    : out STD_LOGIC_VECTOR (1 downto 0)
+    );
+end alu_lab8;
+
+architecture Behavioral of alu_lab8 is
+begin
+    process(A, B, sel)
+    begin
+        case sel is
+            when "000" => Y <= A + B;
+            when "001" => Y <= A - B;
+            when "010" => Y <= A AND B;
+            when "011" => Y <= NOT (A AND B);  -- NAND
+            when "100" => Y <= A XOR B;
+            when "101" => Y <= A XNOR B;
+            when "110" => Y <= A OR B;
+            when "111" => Y <= A;
+            when others => Y <= "ZZ";
+        end case;
+    end process;
+end Behavioral;
+
+
+
+
+##TESTBENCH
+
+
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY alu IS
+END alu;
+
+ARCHITECTURE behavior OF alu IS 
+
+    -- Component Declaration for the Unit Under Test (UUT)
+    COMPONENT alu_lab8
+    PORT(
+         A   : IN  std_logic_vector(1 downto 0);
+         B   : IN  std_logic_vector(1 downto 0);
+         sel : IN  std_logic_vector(2 downto 0);
+         Y   : OUT std_logic_vector(1 downto 0)
+        );
+    END COMPONENT;
+
+    -- Signals
+    signal A   : std_logic_vector(1 downto 0) := (others => '0');
+    signal B   : std_logic_vector(1 downto 0) := (others => '0');
+    signal sel : std_logic_vector(2 downto 0) := (others => '0');
+    signal Y   : std_logic_vector(1 downto 0);
+
+BEGIN
+    -- Instantiate the Unit Under Test (UUT)
+    uut: alu_lab8 PORT MAP (
+        A   => A,
+        B   => B,
+        sel => sel,
+        Y   => Y
+    );
+
+    -- Test process
+    PROCESS
+    BEGIN
+        A <= "10";  -- 2
+        B <= "01";  -- 1
+        sel <= "000";  -- A + B
+        wait for 20 ns;
+
+        sel <= "001";  -- A - B
+        wait for 20 ns;
+
+        sel <= "010";  -- A AND B
+        wait for 20 ns;
+
+        sel <= "011";  -- A NAND B
+        wait for 20 ns;
+
+        sel <= "100";  -- A XOR B
+        wait for 20 ns;
+
+        sel <= "101";  -- A XNOR B
+        wait for 20 ns;
+
+        sel <= "110";  -- A OR B
+        wait for 20 ns;
+
+        sel <= "111";  -- A
+        wait;
+
+    END PROCESS;
+END;
+
+
