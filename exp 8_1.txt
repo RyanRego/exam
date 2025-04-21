@@ -3,7 +3,6 @@ use IEEE.STD_LOGIC_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-
 entity modN_counter is
 
 generic(n: integer := 128);
@@ -12,15 +11,14 @@ port(
 clk : in STD_LOGIC;
 reset : in STD_LOGIC;
 dout : out STD_LOGIC_VECTOR(6 downto 0)
-         );
+);
 end modN_counter;
 
 
 architecture A_modN of modN_counter is
+
 signal temp:std_logic_vector(22 downto 0);  
 signal sclk:std_logic;
-
-
 
 begin
 
@@ -38,8 +36,7 @@ counter : process (sclk,reset) is
 
 	 variable m : integer range 0 to (n-1) := 0;
     begin
-        if (reset='1') then
-m := 0;
+        if (reset='1') then m := 0;
         --elsif (rising_edge (clk)) then
 		elsif(sclk'event and sclk='1') then
 m := m + 1;
@@ -59,10 +56,6 @@ TESTBENCH
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
- 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
  
 ENTITY MOD_TB IS
 END MOD_TB;

@@ -161,3 +161,27 @@ rst_process :process
               wait; 
         end process;
 END;
+
+
+
+
+UCF FILE
+
+NET "CLK"   LOC = "L15"; # Bank = 1, Pin name = IO_L42P_GCLK7_M1UDM, Type = GCLK, Sch name = GCLK
+
+
+# onBoardLeds
+NET "pout<0>" LOC = "U18"; # Bank = 1, Pin name = IO_L52N_M1DQ15,  Sch name = LD0
+NET "pout<1>" LOC = "M14"; # Bank = 1, Pin name = IO_L53P,  Sch name = LD1
+NET "pout<2>" LOC = "N14"; # Bank = 1, Pin name = IO_L53N_VREF,  Sch name = LD2
+NET "pout<3>" LOC = "L14"; # Bank = 1, Pin name = IO_L61P,  Sch name = LD3
+NET "Sout" LOC = "M13"; # Bank = 1, Pin name = IO_L61N,  Sch name = LD4
+# onBoard SWITCHES
+ NET "pin<0>" LOC = "A10"; # Bank = 0, Pin name = IO_L37N_GCLK12,  Sch name = SW0
+ NET "pin<1>" LOC = "D14"; # Bank = 0, Pin name = IO_L65P_SCP3,  Sch name = SW1
+ NET "pin<2>" LOC = "C14"; # Bank = 0, Pin name = IO_L65N_SCP2,  Sch name = SW2
+ NET "pin<3>" LOC = "P15"; # Bank = 1, Pin name = IO_L74P_AWAKE_1,  Sch name = SW3
+ NET "sin" LOC = "P12"; # Bank = 2, Pin name = IO_L13N_D10,  Sch name = SW4
+ NET "rst" LOC = "R5";  # Bank = 2, Pin name = IO_L48P_D7,  Sch name = SW5
+ NET "m<0>" LOC = "T5";  # Bank = 2, Pin name = IO_L48N_RDWR_B_VREF_2, Sch name = SW6
+ NET "m<1>" LOC = "E4";  # Bank = 3, Pin name = IO_L54P_M3RESET,  Sch name = SW7

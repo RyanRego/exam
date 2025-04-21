@@ -153,3 +153,26 @@ BEGIN
         wait;
    end process;
 	end behavior;
+
+
+
+
+
+
+
+
+UCF FILE
+NET "reset" LOC = "E4"; 
+NET "CLK" LOC ="L15"; 
+NET "enr" LOC ="T5"; 
+NET "enw" LOC ="R5"; 
+NET "data_in<0>" LOC ="A10"; 
+NET "data_in<1>" LOC ="D14";
+NET "data_in<2>" LOC ="C14";
+
+NET "data_out<0>" LOC = "U18"; # Bank = 1, Pin name = IO_L52N_M1DQ15,  Sch name = LD0
+NET "data_out<1>" LOC = "M14"; # Bank = 1, Pin name = IO_L53P,  Sch name = LD1
+NET "data_out<2>" LOC = "N14"; # Bank = 1, Pin name = IO_L53N_VREF,  Sch name = LD2
+
+NET "fifo_empty" LOC = "P16"; # Bank = 1, Pin name = IO_L61P,  Sch name = LD3
+NET "fifo_full" LOC = "D4";

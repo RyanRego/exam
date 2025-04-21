@@ -101,3 +101,15 @@ BEGIN
 END;
 
 
+#UCF file
+
+Net"A<0>"LOC="A10";
+Net"A<1>"LOC="D14";
+Net"B<0>"LOC="C14";
+Net"B<1>"LOC="P15";
+Net"SEL<0>"LOC="P12";
+Net"SEL<1>"LOC="R5";
+Net"SEL<2>"LOC="T5";
+Net"Y<0>"LOC="U18";
+Net"Y<1>"LOC="M14";
+    
