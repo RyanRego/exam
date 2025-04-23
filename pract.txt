@@ -1,107 +1,69 @@
-library IEE;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity alu is
+entity modn IS
+    generic(n : integer := 128);
     port(
-        a, b: in std_logic_vector(1 downto 0);
-        sel: in std_logic_vector(2 downto 0);
-        out: out std_logic_vector(1 downto 0);
+        clk  : in std_logic;
+        rst  : in std_logic;
+        dout : out std_logic_vector(6 downto 0)
     );
-end alu;
+end modn;
 
-architecture behavioral of alu is
-begin 
-process(a, b, sel)
+architecture Behavioral of modn is
+    signal temp : std_logic_vector(22 downto 0);
+    signal sclk : std_logic;
+begin
+
+    p11: process(clk, rst)
     begin
-        case sel is
-        when "000" => out <= a + b;
-        when "000" => out <= a + b;
-        when "000" => out <= a + b;
-        when "000" => out <= a + b;
-        when "000" => out <= a + b;
-    end case;
-end process;
+        if rst = '1' then
+            temp <= (others => '0');
+        elsif rising_edge(clk) then
+            temp <= temp + 1;
+        end if;
+    end process;
+    
+    sclk <= temp(22);
+
+    counter : process(sclk, rst)
+        variable m : integer range 0 to (n-1) := 0;
+    begin
+        if rst = '1' then
+            m := 0;
+        elsif rising_edge(sclk) then
+            m := m + 1;
+        end if;
+
+        if m = n then
+            m := 0;
+        end if;
+
+        dout <= conv_std_logic_vector(m, 7);
+    end process counter;
+
 end Behavioral;
 
 
-TESTBENCH CODE;
+architecture behavior of modn is
 
-library ieee;
-use ieee.std_logic_1164.all;
+--component
+--signals
+--uut
 
-
-entity alu is
-end entity;
-
-architecture behavior of alu is 
-##components
-##signals
-
-component alu
+component modn
 port(
-    a, b: in std_logic_vector(1 downto 0);
-    sel: in std_logic_vector(2 downto 0);
-    out: out std_logic_vector(1 downto 0);
+    clk: 
+    reset:
+    dout:
 );
 end component;
 
-    signal A   : std_logic_vector(1 downto 0) := (others => '0');
-    signal B   : std_logic_vector(1 downto 0) := (others => '0');
-    signal sel : std_logic_vector(2 downto 0) := (others => '0');
-    signal Y   : std_logic_vector(1 downto 0);
+
+initializing signals and variables := 
+signal sclk: std_logic := 0;
+signal reset: std_logic := 0;
 
 
-begin 
-
-    //uut
-    uut: alu port map(
-        a => a;
-        b => b;
-        sel => sel;
-        out => out;
-    );
-
-    process
-    begin
-        a <= "10";
-        b <= "10";
-        sel <= "000";
-        wait for 20ns;
-    end process;
-end behavior;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-MOD-N counter
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.unsigned.all;
